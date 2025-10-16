@@ -1,0 +1,70 @@
+erDiagram
+    users {
+        bigint id PK
+        varchar email UK
+        varchar password
+        varchar first_name
+        varchar last_name
+        enum role
+        datetime created_at
+        datetime updated_at
+    }
+    
+    products {
+        bigint id PK
+        varchar name
+        text description
+        decimal price
+        int stock_quantity
+        varchar image_url
+        enum status
+        datetime created_at
+        datetime updated_at
+    }
+    
+    orders {
+        bigint id PK
+        varchar order_number UK
+        bigint user_id FK
+        decimal total_amount
+        enum status
+        datetime created_at
+        datetime updated_at
+    }
+    
+    order_items {
+        bigint id PK
+        bigint order_id FK
+        bigint product_id FK
+        int quantity
+        decimal unit_price
+        datetime created_at
+    }
+    
+    payment_quotas {
+        bigint id PK
+        bigint user_id FK,UK
+        decimal monthly_limit
+        decimal current_month_spent
+        datetime quota_reset_date
+        datetime created_at
+        datetime updated_at
+    }
+    
+    payments {
+        bigint id PK
+        varchar payment_reference UK
+        bigint order_id FK,UK
+        decimal amount
+        enum status
+        enum method
+        varchar fake_gateway_transaction_id
+        datetime created_at
+        datetime processed_at
+    }
+
+    users ||--o{ orders : places
+    users ||--|| payment_quotas : has
+    orders ||--o{ order_items : contains
+    orders ||--|| payments : has
+    order_items }o--|| products : includes
